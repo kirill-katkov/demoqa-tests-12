@@ -1,11 +1,13 @@
 package quru.qa.tests;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class RegistrationFormTests {
@@ -43,7 +45,10 @@ public class RegistrationFormTests {
     @Test
     void automatedFormTest() { //
         open("/automation-practice-form");
-        zoom(0.5); //установка масштаба для маленьких экранов
+        //zoom(0.5); //установка масштаба для маленьких экранов
+        // hide footer and GoogleAds (as Submit btn is not visible on my screen)
+        Selenide.executeJavaScript("document.querySelector(\"footer\").hidden = 'true';" +
+                "document.querySelector(\"#fixedban\").hidden = 'true'");
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
         $("#userEmail").setValue(userEmail);
@@ -75,5 +80,8 @@ public class RegistrationFormTests {
                 text(currentAddress),
                 text(state + " " + city)
         );
+
+        $("#closeLargeModal").click();
+        $(".modal-content").shouldNotBe(visible);
     }
 }
